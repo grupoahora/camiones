@@ -148,7 +148,7 @@ while run == True:
     if bullet:
         group_bullet.add(bullet)
     for bullet in group_bullet:
-        bullet.update()
+        bullet.update(lists_objs)
         
     #print(group_bullet)
     

@@ -13,7 +13,6 @@ class Person():
         self.animationsv = animationsv
         self.energy = energy
     
-        
         # Inicializamos el rectángulo con las dimensiones de la primera imagen
         self.shape = self.image.get_rect(topleft=(x, y))
         self.shape.center =  (x,y)
@@ -73,11 +72,15 @@ class Obj():
         self.shape.center =  (x,y)
         self.animations = animations
         self.energy = energy
+        self.life = True
         
     def draw(self, interfaz):
         interfaz.blit(self.image, self.shape)
         pygame.draw.rect(interfaz, const.COLOR_PERSON, self.shape, 1)
     def update(self):
+        if self.energy <= 0:
+            self.energy = 0
+            self.life = False
         cooldown_animation = const.SPEED_ANIMATION_PERSON
         self.image = self.animations[self.frame_index]
         if pygame.time.get_ticks() - self.update_time > cooldown_animation:

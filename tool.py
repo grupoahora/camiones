@@ -86,9 +86,11 @@ class Bullet(pygame.sprite.Sprite):
         
         #verify if collision detection with objs
         for obj in lists_objs:
-            if obj,shape,colliderect(self.rect): 
-                daño = 15 + random.randint(-7,7)
-                
+            if obj.shape.colliderect(self.rect): 
+                daño = 43 + random.randint(-7,7)
+                obj.energy -= daño
+                self.kill()
+                break
                 
     def draw(self, interfaz):
         interfaz.blit(self.image, (self.rect.centerx, self.rect.centery))
