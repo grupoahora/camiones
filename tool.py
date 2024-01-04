@@ -78,6 +78,8 @@ class Bullet(pygame.sprite.Sprite):
         self.delta_y = -math.sin(math.radians(self.angle))*const.SPEED_BULLET
 
     def update(self, lists_objs):
+        damage = 0
+        pos_damage = None
         self.rect.x = self.rect.x + self.delta_x
         self.rect.y = self.rect.y + self.delta_y
         #validate visualization bullet position
@@ -87,10 +89,14 @@ class Bullet(pygame.sprite.Sprite):
         #verify if collision detection with objs
         for obj in lists_objs:
             if obj.shape.colliderect(self.rect): 
-                daño = 43 + random.randint(-7,7)
-                obj.energy -= daño
+                damage = 43 + random.randint(-7,7)
+                pos_damage = obj.shape
+                obj.energy = obj.energy - damage
                 self.kill()
                 break
+        return damage, pos_damage
                 
     def draw(self, interfaz):
         interfaz.blit(self.image, (self.rect.centerx, self.rect.centery))
+        
+        

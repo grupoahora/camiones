@@ -4,6 +4,7 @@ from person import Person
 from person import Obj
 from tool import Tool
 import os
+from text import DamageText
 
 #funciones
 #scale images
@@ -28,6 +29,9 @@ pygame.init()
 window = pygame.display.set_mode([const.WIDTH, const.HEIGHT])
 pygame.display.set_caption("camiones")
 
+#fonts
+
+font = pygame.font.Font("assets/fonts/monogram.ttf", 25)
 
 #import images
 
@@ -95,7 +99,13 @@ lists_objs.append(obj_fungi1)
 hook = Tool(image_hook, image_bullet_hook)
 
 #create gruop the sprites
+group_damage_text = pygame.sprite.Group()
 group_bullet = pygame.sprite.Group()
+
+
+#temporal y borrar
+#damage_text = DamageText(100, 240, "45", font, const.COLOR_DAMAGE_TEXT)
+#group_damage_text.add(damage_text)    
 #definir variables de movimiento
 move_top = False
 move_down = False
@@ -104,6 +114,11 @@ move_right = False
 #controller framerate
 clock = pygame.time.Clock()
 run = True
+recogidas = 0
+contador_font = pygame.font.Font("assets/fonts/monogram.ttf", 20)
+boton_reinicio_rect = pygame.Rect(600, 10, 120, 40)
+boton_reinicio_texto = font.render("Reiniciar", True, const.COLOR_DAMAGE_TEXT)
+
 while run == True:
     window.fill(const.COLOR_BG)
     #calcular movimiento del jugador
@@ -133,8 +148,14 @@ while run == True:
     #update state of obj
     for obj in lists_objs:
        obj.update()
-       print(obj.energy)
-   
+       delete = obj.check_life(lists_objs,font, group_damage_text)
+       if delete:
+           recogidas = recogidas+1
+           print(recogidas)
+       #print(obj.energy)
+    contador_text = contador_font.render(f"Recogidas: {recogidas}", True, const.COLOR_DAMAGE_TEXT)
+    window.blit(contador_text, (10, 10))
+
     # draw of player
     player.draw(window)
     
@@ -148,8 +169,13 @@ while run == True:
     if bullet:
         group_bullet.add(bullet)
     for bullet in group_bullet:
-        bullet.update(lists_objs)
-        
+        damage, pos_damage = bullet.update(lists_objs)
+        if damage:
+            damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, const.COLOR_DAMAGE_TEXT)
+            group_damage_text.add(damage_text)
+    #update damage
+    
+    group_damage_text.update()
     #print(group_bullet)
     
     #draw tool
@@ -159,6 +185,8 @@ while run == True:
     #draw bullet
     for bullet in group_bullet:
         bullet.draw(window)
+    #draw damage text
+    group_damage_text.draw(window)
         
     
     
@@ -188,5 +216,16 @@ while run == True:
                 move_top = False
             if event.key == pygame.K_s:
                 move_down = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if boton_reinicio_rect.collidepoint(event.pos):
+                    # Reiniciar juego
+                    recogidas = 0
+                    # Restablecer otros valores del juego según sea necesario
+                    lists_objs = [...]  # Vuelve a crear los objetos iniciales
+
+                
+    pygame.draw.rect(window, const.COLOR_DAMAGE_TEXT, boton_reinicio_rect)
+    window.blit(boton_reinicio_texto, (boton_reinicio_rect.x + 10, boton_reinicio_rect.y + 10))
+
     pygame.display.update()
 pygame.quit()

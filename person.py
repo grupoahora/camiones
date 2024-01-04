@@ -1,5 +1,6 @@
 import pygame
 import const
+from text import DamageText
 class Person():
     def __init__(self, x, y, animationsh,animationsv, energy):
         self.fliph = False
@@ -73,6 +74,7 @@ class Obj():
         self.animations = animations
         self.energy = energy
         self.life = True
+        self.cooldown_time = 0
         
     def draw(self, interfaz):
         interfaz.blit(self.image, self.shape)
@@ -89,4 +91,15 @@ class Obj():
             
         if self.frame_index >= len(self.animations):
             self.frame_index = 0
+    def check_life(self, lists_objs, font, group_damage_text):
         
+        if not self.life:
+            current_time = pygame.time.get_ticks()
+            # Verifica si ha pasado el tiempo de cooldown
+            if current_time - self.cooldown_time >= 1000:
+                lists_objs.remove(self)  # Elimina el objeto de la lista
+                self.cooldown_time = current_time  # Actualiza el tiempo de cooldown
+
+                damage_text = DamageText(self.shape.centerx, self.shape.centery, str("Recogido"), font, const.COLOR_DAMAGE_TEXT)
+                group_damage_text.add(damage_text)     
+            return True                   
