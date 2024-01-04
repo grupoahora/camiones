@@ -5,6 +5,7 @@ from person import Obj
 from tool import Tool
 import os
 from text import DamageText
+import random
 
 #funciones
 #scale images
@@ -82,10 +83,10 @@ player = Person(400, 750, animationsh, animationsv, 100)
 
 
 #create the obj
-obj_dirt0 = Obj(200, 700, animations_objs[0], 100)
-obj_dirt1 = Obj(400, 700, animations_objs[0], 100)
-obj_fungi0 = Obj(500, 700, animations_objs[1], 100)
-obj_fungi1 = Obj(300, 700, animations_objs[1], 100)
+obj_dirt0 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[0], 100)
+obj_dirt1 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[0], 100)
+obj_fungi0 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[1], 100)
+obj_fungi1 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[1], 100)
 
 #create list of objs
 
@@ -115,9 +116,9 @@ move_right = False
 clock = pygame.time.Clock()
 run = True
 recogidas = 0
-contador_font = pygame.font.Font("assets/fonts/monogram.ttf", 20)
+contador_font = pygame.font.Font("assets/fonts/monogram.ttf", 30)
 boton_reinicio_rect = pygame.Rect(600, 10, 120, 40)
-boton_reinicio_texto = font.render("Reiniciar", True, const.COLOR_DAMAGE_TEXT)
+boton_reinicio_texto = font.render("Reiniciar", True, (255,255,255))
 
 while run == True:
     window.fill(const.COLOR_BG)
@@ -216,13 +217,25 @@ while run == True:
                 move_top = False
             if event.key == pygame.K_s:
                 move_down = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if boton_reinicio_rect.collidepoint(event.pos):
-                    # Reiniciar juego
-                    recogidas = 0
-                    # Restablecer otros valores del juego según sea necesario
-                    lists_objs = [...]  # Vuelve a crear los objetos iniciales
-
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if boton_reinicio_rect.collidepoint(event.pos):
+                
+                # Reiniciar juego
+                recogidas = 0
+                
+                #create the obj
+                obj_dirt0 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[0], 100)
+                obj_dirt1 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[0], 100)
+                obj_fungi0 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[1], 100)
+                obj_fungi1 = Obj(random.randint(1, 800), random.randint(1, 800), animations_objs[1], 100)
+                
+                #create list of objs
+                
+                lists_objs = []
+                lists_objs.append(obj_dirt0)
+                lists_objs.append(obj_dirt1)
+                lists_objs.append(obj_fungi0)
+                lists_objs.append(obj_fungi1)
                 
     pygame.draw.rect(window, const.COLOR_DAMAGE_TEXT, boton_reinicio_rect)
     window.blit(boton_reinicio_texto, (boton_reinicio_rect.x + 10, boton_reinicio_rect.y + 10))
